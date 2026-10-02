@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Support Tickets | SupportAI</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f6f8fc; color: #172033; }
+        .top { height: 72px; background: #fff; border-bottom: 1px solid #e5e9f2; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
+        .brand { display: flex; align-items: center; gap: 10px; }
+        .brand-icon { width: 34px; height: 34px; border-radius: 9px; background: #315eea; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .brand-name { font-size: 18px; font-weight: 800; }
+        .back { border: none; background: #edf2ff; color: #315eea; padding: 10px 16px; border-radius: 9px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .back:hover { background: #dfe7ff; }
+        .wrap { max-width: 1000px; margin: 32px auto; padding: 0 20px; }
+        .title { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+        .sub { color: #64748b; font-size: 14px; margin-bottom: 24px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat { padding: 20px; background: #fff; border-radius: 14px; border: 1px solid #e5e9f2; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .value { font-size: 26px; font-weight: 800; margin-top: 6px; color: #0f172a; }
+        .card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; padding: 28px; margin-bottom: 24px; box-shadow: 0 5px 20px rgba(16, 24, 40, 0.03); }
+        .card h2 { font-size: 18px; margin-bottom: 14px; color: #0f172a; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; }
+        input, textarea, select { width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 9px; font-family: inherit; font-size: 14px; margin-bottom: 16px; outline: none; transition: border-color 0.2s; }
+        input:focus, textarea:focus, select:focus { border-color: #315eea; }
+        textarea { min-height: 100px; resize: vertical; }
+        button.primary { border: none; background: #315eea; color: white; padding: 12px 22px; border-radius: 9px; font-weight: 700; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+        button.primary:hover { background: #254ec9; }
+        .message { margin-top: 14px; font-size: 13px; font-weight: 600; }
+        .ticket { border: 1px solid #e5e9f2; border-radius: 12px; padding: 18px; margin-top: 14px; background: #fafcff; }
+        .ticket-head { display: flex; justify-content: space-between; align-items: center; }
+        .pill { padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+        .pill-OPEN { background: #fef3c7; color: #b45309; }
+        .pill-IN_PROGRESS { background: #e0e7ff; color: #3730a3; }
+        .pill-RESOLVED { background: #dcfce7; color: #15803d; }
+        .pill-CLOSED { background: #f1f5f9; color: #475569; }
+        .meta { font-size: 12px; color: #64748b; margin-top: 8px; }
+        .issue { margin-top: 10px; line-height: 1.5; font-size: 14px; color: #1e293b; }
+        .empty { text-align: center; color: #64748b; padding: 30px; font-size: 14px; }
+        @media(max-width:700px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="top">
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+            <div class="brand-name">SupportAI</div>
+        </div>
+        <button class="back" onclick="location.href='/customer/dashboard.html'">← Dashboard</button>
+    </header>
+
+    <main class="wrap">
+        <h1 class="title">My Support Tickets</h1>
+        <div class="sub">Submit assistance requests to support engineers and monitor ticket progress in real time.</div>
+
+        <section class="grid">
+            <div class="stat"><div class="label">Total Submitted</div><div class="value" id="total">0</div></div>
+            <div class="stat"><div class="label">Active / In Progress</div><div class="value" id="open" style="color:#d97706;">0</div></div>
+            <div class="stat"><div class="label">Resolved Tickets</div><div class="value" id="resolved" style="color:#16a34a;">0</div></div>
+        </section>
+
+        <!-- TICKET CREATION FORM -->
+        <section class="card">
+            <h2>Create New Support Ticket</h2>
+            <label for="issue">Describe Your Issue or Technical Problem</label>
+            <textarea id="issue" placeholder="Describe what went wrong, error messages, or assistance needed..."></textarea>
+
+            <label for="priority">Urgency &amp; Priority Level</label>
+            <select id="priority">
+                <option value="LOW">LOW — General question or minor request</option>
+                <option value="MEDIUM" selected>MEDIUM — Normal operational inquiry</option>
+                <option value="HIGH">HIGH — Functionality degraded or blocked</option>
+                <option value="URGENT">URGENT / CRITICAL — Immediate service outage</option>
+            </select>
+
+            <button id="createBtn" class="primary" onclick="createTicket()">Submit Support Ticket →</button>
+            <div id="msg" class="message"></div>
+        </section>
+
+        <!-- YOUR TICKETS LIST -->
+        <section class="card">
+            <h2>Your Support Tickets History</h2>
+            <div id="tickets"><div class="empty">Loading tickets...</div></div>
+        </section>
+    </main>
+
+    <script>
+        const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+        const raw = localStorage.getItem("user") || sessionStorage.getItem("user");
+        if (!token || !raw) location.href = "/login.html";
+        const user = JSON.parse(raw);
+        const auth = { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" };
+
+        function esc(s) {
+            return String(s ?? "").replace(/[&<>"']/g, m => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+            }[m]));
+        }
+
+        async function loadTickets() {
+            try {
+                let r = await fetch(`/api/tickets/${encodeURIComponent(user.user_id)}`, { headers: auth });
+                let d = await r.json();
+                if (!r.ok) throw Error(d.detail || "Unable to load tickets.");
+
+                let a = d.tickets || [];
+                total.textContent = a.length;
+                open.textContent = a.filter(t => !["RESOLVED", "CLOSED"].includes(String(t.status || "").toUpperCase())).length;
+                resolved.textContent = a.filter(t => ["RESOLVED", "CLOSED"].includes(String(t.status || "").toUpperCase())).length;
+
+                if (!a.length) {
+                    tickets.innerHTML = '<div class="empty">You have not submitted any support tickets yet.</div>';
+                    return;
+                }
+
+                tickets.innerHTML = a.map(t => {
+                    let s = String(t.status || "OPEN").toUpperCase();
+                    if (s === "PENDING") s = "IN_PROGRESS";
+                    let p = String(t.priority || "MEDIUM").toUpperCase();
+                    let dateStr = (t.created_at || "").replace("T", " ").slice(0, 19);
+
+                    return `
+                        <div class="ticket">
+                            <div class="ticket-head">
+                                <strong>Ticket #${esc(t.ticket_id)}</strong>
+                                <span class="pill pill-${esc(s)}">${esc(s.replace("_", " "))}</span>
+                            </div>
+                            <div class="meta">Priority: <strong>${esc(p)}</strong> · Submitted on ${esc(dateStr)}</div>
+                            <div class="issue">${esc(t.issue)}</div>
+                        </div>
+                    `;
+                }).join("");
+            } catch (e) {
+                tickets.innerHTML = `<div class="empty" style="color:#dc2626;">${esc(e.message)}</div>`;
+            }
+        }
+
+        async function createTicket() {
+            let issue = document.getElementById("issue").value.trim();
+            let priority = document.getElementById("priority").value;
+            let msg = document.getElementById("msg");
+            let btn = document.getElementById("createBtn");
+
+            if (!issue) {
+                msg.textContent = "Please describe the problem you are experiencing.";
+                msg.style.color = "#dc2626";
+                return;
+            }
+
+            msg.textContent = "Creating and assigning ticket...";
+            msg.style.color = "#2563eb";
+            btn.disabled = true;
+
+            try {
+                let r = await fetch("/api/tickets", {
+                    method: "POST",
+                    headers: auth,
+                    body: JSON.stringify({ user_id: user.user_id, issue, priority })
+                });
+                let d = await r.json();
+                if (!r.ok) throw Error(d.detail || "Ticket creation failed.");
+
+                msg.textContent = `Ticket created successfully! Ticket ID is #${d.ticket_id}`;
+                msg.style.color = "#16a34a";
+                document.getElementById("issue").value = "";
+                loadTickets();
+            } catch (e) {
+                msg.textContent = e.message;
+                msg.style.color = "#dc2626";
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        loadTickets();
+    </script>
+</body>
+</html>

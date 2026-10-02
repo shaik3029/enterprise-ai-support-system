@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | SupportAI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f6f8fc;
+            color: #172033;
+        }
+
+        .dashboard {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #111827;
+            color: #fff;
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 10px 30px;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #315eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .brand-subtitle {
+            font-size: 9px;
+            color: #9ca3af;
+            margin-top: 2px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            color: #cbd5e1;
+            font-size: 14px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .nav-item:hover {
+            background: #1f2937;
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: #2563eb;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+        }
+
+        .logout-button {
+            width: 100%;
+            border: none;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .logout-button:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e9f2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 750;
+        }
+
+        .page-subtitle {
+            color: #7b8497;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: #8b94a7;
+            margin-top: 2px;
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 32px;
+        }
+
+        .welcome {
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: white;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            font-size: 13px;
+            opacity: 0.85;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .admin-badge {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* STATS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e9f2;
+            border-radius: 15px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .stat-label {
+            color: #7b8497;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .stat-description {
+            color: #9aa3b5;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        /* ADMIN ACTIONS */
+        .section-title {
+            font-size: 18px;
+            font-weight: 750;
+            margin-bottom: 16px;
+            color: #0f172a;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .action-card {
+            background: white;
+            border: 1px solid #e5e9f2;
+            border-radius: 15px;
+            padding: 24px;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(30, 50, 100, 0.08);
+        }
+
+        .action-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .action-card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .action-card p {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .action-button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .action-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* SYSTEM STATUS */
+        .system-status {
+            background: white;
+            border: 1px solid #e5e9f2;
+            border-radius: 15px;
+            padding: 24px;
+        }
+
+        .status-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 13px;
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #16a34a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        @media (max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .actions {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                display: none;
+            }
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+            .stats, .actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+            <div>
+                <div class="brand-name">SupportAI</div>
+                <div class="brand-subtitle">Admin Console</div>
+            </div>
+        </div>
+
+        <div class="nav-title">Administration</div>
+
+        <button class="nav-item active" onclick="location.href='/admin/dashboard.html'">
+            <span class="nav-icon">▦</span>
+            Dashboard
+        </button>
+
+        <button class="nav-item" onclick="location.href='/admin/tickets.html'">
+            <span class="nav-icon">▣</span>
+            Tickets
+        </button>
+
+        <button class="nav-item" onclick="location.href='/admin/users.html'">
+            <span class="nav-icon">♙</span>
+            User Management
+        </button>
+
+        <button class="nav-item" onclick="location.href='/admin/knowledge.html'">
+            <span class="nav-icon">▤</span>
+            Knowledge Base
+        </button>
+
+        <button class="nav-item" onclick="location.href='/admin/analytics.html'">
+            <span class="nav-icon">◈</span>
+            Call Analytics
+        </button>
+
+        <button class="nav-item" onclick="location.href='/admin/account.html'">
+            <span class="nav-icon">◯</span>
+            Account
+        </button>
+
+        <div class="sidebar-bottom">
+            <button class="logout-button" onclick="logout()">
+                ↪ &nbsp; Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <div class="page-title">Admin Dashboard</div>
+                <div class="page-subtitle">Enterprise support administration &amp; AI monitoring</div>
+            </div>
+
+            <div class="user-area">
+                <div>
+                    <div class="user-name" id="userName">Administrator</div>
+                    <div class="user-role" id="userRole">ADMIN</div>
+                </div>
+                <div class="user-avatar" id="userAvatar">A</div>
+            </div>
+        </header>
+
+        <section class="content">
+
+            <!-- WELCOME -->
+            <div class="welcome">
+                <div>
+                    <h1 id="welcomeMessage">Welcome, Administrator</h1>
+                    <p>Manage customer support operations, live tickets, RAG enterprise knowledge base, and speech analytics from one centralized workspace.</p>
+                </div>
+                <div class="admin-badge">
+                    🛡 Administrator Access
+                </div>
+            </div>
+
+            <!-- DYNAMIC STATISTICS -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Tickets</div>
+                    <div class="stat-value" id="statTotalTickets">0</div>
+                    <div class="stat-description">Support requests recorded</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Active / Open Tickets</div>
+                    <div class="stat-value" id="statOpenTickets" style="color: #ea580c;">0</div>
+                    <div class="stat-description">Requires engineer review</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Knowledge Documents</div>
+                    <div class="stat-value" id="statKnowledgeDocs">0</div>
+                    <div class="stat-description">PDFs indexed in FAISS vector store</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Registered Users</div>
+                    <div class="stat-value" id="statUsers">0</div>
+                    <div class="stat-description">Customer &amp; Admin accounts</div>
+                </div>
+            </div>
+
+            <!-- ADMIN QUICK ACTIONS -->
+            <div class="section-title">Operations &amp; Management</div>
+
+            <div class="actions">
+                <div class="action-card">
+                    <div>
+                        <div class="action-icon">▣</div>
+                        <h3>Ticket Management</h3>
+                        <p>Review customer tickets, update status (Open, In Progress, Resolved), and adjust priorities.</p>
+                    </div>
+                    <button class="action-button" onclick="location.href='/admin/tickets.html'">Manage Tickets →</button>
+                </div>
+
+                <div class="action-card">
+                    <div>
+                        <div class="action-icon">▤</div>
+                        <h3>Knowledge Base</h3>
+                        <p>Upload enterprise security and policy PDFs to update the FAISS vector database in real time.</p>
+                    </div>
+                    <button class="action-button" onclick="location.href='/admin/knowledge.html'">Manage Knowledge →</button>
+                </div>
+
+                <div class="action-card">
+                    <div>
+                        <div class="action-icon">◈</div>
+                        <h3>Call Analytics</h3>
+                        <p>Upload customer audio recordings for speech transcription, sentiment, and issue extraction.</p>
+                    </div>
+                    <button class="action-button" onclick="location.href='/admin/analytics.html'">Analyze Audio →</button>
+                </div>
+
+                <div class="action-card">
+                    <div>
+                        <div class="action-icon">◯</div>
+                        <h3>Admin Account</h3>
+                        <p>View administrative session details, role permissions, and active JWT configuration.</p>
+                    </div>
+                    <button class="action-button" onclick="location.href='/admin/account.html'">View Account →</button>
+                </div>
+                 
+                <div class="action-card">
+                    <div>
+                        <div class="action-icon">👥</div>
+                        <h3>User Management</h3>
+                        <p>Manage customer accounts, block or unblock users, and create administrator accounts.</p>
+                        </div>
+                        <button class="action-button" onclick="location.href='/admin/users.html'">Manage Users →</button>
+                </div>
+
+                </div>
+                
+
+            
+
+            <!-- SYSTEM STATUS -->
+            <div class="system-status">
+                <div class="status-title">Core Services Status</div>
+
+                <div class="status-row">
+                    <span>FastAPI REST Backend</span>
+                    <span class="status-indicator">
+                        <span class="status-dot"></span>
+                        Operational (v2.0.0)
+                    </span>
+                </div>
+
+                <div class="status-row">
+                    <span>Multi-Agent AI Routing Engine</span>
+                    <span class="status-indicator">
+                        <span class="status-dot"></span>
+                        Operational (Groq LLM)
+                    </span>
+                </div>
+
+                <div class="status-row">
+                    <span>Knowledge Retrieval (FAISS Vector Store)</span>
+                    <span class="status-indicator">
+                        <span class="status-dot"></span>
+                        Operational (MiniLM-L6-v2)
+                    </span>
+                </div>
+
+                <div class="status-row">
+                    <span>Enterprise SQLite Database</span>
+                    <span class="status-indicator">
+                        <span class="status-dot"></span>
+                        Operational (enterprise_support.db)
+                    </span>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+
+<script>
+    // 1. Session check
+    const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+    const userData = localStorage.getItem("user") || sessionStorage.getItem("user");
+
+    if (!token || !userData) {
+        window.location.href = "/login.html";
+    }
+
+    let user = null;
+    try {
+        user = JSON.parse(userData);
+        if (user.role !== "ADMIN") {
+            window.location.href = "/customer/dashboard.html";
+        }
+        document.getElementById("userName").textContent = user.name || "Administrator";
+        document.getElementById("userRole").textContent = user.role || "ADMIN";
+        document.getElementById("welcomeMessage").textContent = `Welcome, ${user.name || "Administrator"}`;
+        document.getElementById("userAvatar").textContent = (user.name || "A").charAt(0).toUpperCase();
+    } catch (e) {
+        logout();
+    }
+
+    // 2. Load live stats
+    async function loadStats() {
+        try {
+            const res = await fetch("/api/stats/admin", {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.status === 401) return logout();
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById("statTotalTickets").textContent = data.tickets.total || 0;
+                document.getElementById("statOpenTickets").textContent = (data.tickets.open + data.tickets.in_progress) || 0;
+                document.getElementById("statKnowledgeDocs").textContent = data.knowledge_documents_count || 0;
+                document.getElementById("statUsers").textContent = data.users_count || 0;
+            }
+        } catch (err) {
+            console.error("Failed to load dashboard stats:", err);
+        }
+    }
+
+    // 3. Logout
+    function logout() {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = "/login.html";
+    }
+
+    loadStats();
+</script>
+
+</body>
+</html>

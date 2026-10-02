@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About SupportAI | Multi-Agent Enterprise Architecture</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .page-header {
+            padding: 90px 24px 60px;
+            background: linear-gradient(180deg, #edf2ff 0%, #f8fafc 100%);
+            text-align: center;
+        }
+        .page-header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+        .page-header p {
+            font-size: 18px;
+            color: #475569;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+        .about-section {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .agent-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+        }
+        .agent-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 999px;
+            margin-bottom: 16px;
+        }
+        .agent-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+        .agent-card p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+        .values-banner {
+            background: #0f172a;
+            color: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin: 60px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+        .value-box h4 {
+            font-size: 18px;
+            color: #60a5fa;
+            margin-bottom: 8px;
+        }
+        .value-box p {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <div class="brand-icon">✦</div>
+                <div class="brand-text">
+                    <span class="brand-name">SupportAI</span>
+                    <span class="brand-subtitle">Enterprise Intelligence</span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#features">Features</a>
+                <a href="about.html" class="active">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="nav-auth">
+                <a href="login.html" class="login-link">Login</a>
+                <a href="signup.html" class="signup-button">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= PAGE HEADER ================= -->
+    <div class="page-header">
+        <div class="section-label" style="text-align: center; margin-bottom: 12px;">SYSTEM ARCHITECTURE</div>
+        <h1>Next-Generation Multi-Agent Support</h1>
+        <p>SupportAI replaces single monolithic bots with specialized AI agents working together to answer queries, retrieve knowledge, analyze speech, and manage tickets.</p>
+    </div>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="about-section">
+        <div class="section-heading" style="text-align: center;">
+            <h2>The Five Core Specialized Agents</h2>
+            <p>Every customer interaction is dynamically routed to the ideal agent with zero manual intervention.</p>
+        </div>
+
+        <div class="about-grid">
+            <div class="agent-card">
+                <div class="agent-badge">DATABASE AGENT</div>
+                <h3>Account &amp; Billing Specialist</h3>
+                <p>Securely interfaces with real-time enterprise user databases to inspect customer subscriptions, balances, plan tiers, and account health with strict zero-hallucination guarantees.</p>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-badge">RAG POLICY AGENT</div>
+                <h3>Enterprise Knowledge Retrieval</h3>
+                <p>Leverages FAISS vector indexing and sentence-transformer embeddings across enterprise policies, NIST security controls, zero-trust architectures, and compliance documentation.</p>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-badge">TICKETING AGENT</div>
+                <h3>Escalation &amp; Issue Resolver</h3>
+                <p>Automatically registers, prioritizes, and assigns customer tickets when critical bugs or issues are reported, maintaining audit trails for human support engineers.</p>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-badge">AUDIO INTELLIGENCE</div>
+                <h3>Call Sentiment &amp; Speech Analyst</h3>
+                <p>Transforms call center customer audio recordings into full speech transcripts, sentiment analysis, key issues, and actionable next steps in seconds.</p>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-badge">CLARIFICATION AGENT</div>
+                <h3>Ambiguity Resolver</h3>
+                <p>Detects vague or underspecified customer inquiries (e.g. "my account isn't working") and proactively asks targeted questions to isolate the issue.</p>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-badge">ADMINISTRATION &amp; ANALYTICS</div>
+                <h3>Executive Governance Console</h3>
+                <p>Gives operations leads real-time oversight of tickets, live knowledge document indexing, system health, and customer call insights in a secure dashboard.</p>
+            </div>
+        </div>
+
+        <div class="values-banner">
+            <div class="value-box">
+                <h4>99.9% Uptime</h4>
+                <p>Engineered for mission-critical enterprise customer operations with persistent SQLite storage.</p>
+            </div>
+            <div class="value-box">
+                <h4>Zero Trust Security</h4>
+                <p>JWT-authenticated sessions, bcrypt password hashing, and role-based access control.</p>
+            </div>
+            <div class="value-box">
+                <h4>Sub-Second RAG</h4>
+                <p>FAISS vector search delivers high-accuracy semantic document citations in milliseconds.</p>
+            </div>
+            <div class="value-box">
+                <h4>Full Privacy</h4>
+                <p>Built with enterprise governance following NIST SP 800-53 and privacy engineering frameworks.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="brand">
+                    <div class="brand-icon">✦</div>
+                    <div class="brand-text">
+                        <span class="brand-name">SupportAI</span>
+                        <span class="brand-subtitle">Enterprise Intelligence</span>
+                    </div>
+                </div>
+                <p>AI-powered customer support and enterprise intelligence platform.</p>
+            </div>
+
+            <div class="footer-links">
+                <div>
+                    <h4>Platform</h4>
+                    <a href="index.html#features">Features</a>
+                    <a href="login.html">AI Chat</a>
+                    <a href="login.html">Tickets</a>
+                    <a href="login.html">Call Analytics</a>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div>
+                    <h4>Account</h4>
+                    <a href="login.html">Login</a>
+                    <a href="signup.html">Sign Up</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 SupportAI. All rights reserved.</span>
+            <span>Enterprise AI Customer Support Platform</span>
+        </div>
+    </footer>
+
+</body>
+</html>

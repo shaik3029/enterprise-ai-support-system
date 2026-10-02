@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ticket Management | Admin SupportAI</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, Arial, sans-serif; }
+        body { background: #f5f7fb; color: #1f2937; }
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 250px; background: #111827; color: #fff; padding: 25px 18px; position: fixed; inset: 0 auto 0 0; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; margin-bottom: 35px; padding: 0 10px; }
+        .brand-icon { width: 34px; height: 34px; background: #315eea; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+        .nav-item { width: 100%; border: 0; background: transparent; color: #cbd5e1; padding: 13px 14px; margin-bottom: 6px; border-radius: 9px; text-align: left; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 10px; transition: 0.15s; }
+        .nav-item:hover, .nav-item.active { background: #1f2937; color: #fff; }
+        .nav-item.active { background: #2563eb; font-weight: 600; }
+        .nav-icon { width: 20px; text-align: center; }
+        .sidebar-bottom { position: absolute; left: 18px; right: 18px; bottom: 20px; }
+        .logout-btn { width: 100%; border: 0; background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 11px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .main { margin-left: 250px; width: calc(100% - 250px); padding: 30px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+        .topbar h1 { font-size: 26px; }
+        .topbar p { color: #6b7280; margin-top: 4px; font-size: 13px; }
+        .user-box { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background: #2563eb; color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; }
+        .card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,.04); padding: 25px; margin-bottom: 24px; border: 1px solid #e5e7eb; }
+        .card h2 { font-size: 18px; margin-bottom: 6px; }
+        .muted { color: #6b7280; font-size: 13px; }
+        .btn { border: 0; background: #2563eb; color: #fff; padding: 9px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: background 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+        .btn.danger { background: #ef4444; }
+        .btn.danger:hover { background: #dc2626; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 24px; }
+        .stat { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,.04); border: 1px solid #e5e7eb; }
+        .stat small { color: #6b7280; font-size: 12px; }
+        .stat strong { display: block; font-size: 26px; margin-top: 8px; color: #0f172a; }
+        .table-wrap { overflow: auto; margin-top: 16px; border-radius: 8px; border: 1px solid #e5e7eb; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 13px; vertical-align: middle; }
+        th { background: #f8fafc; font-weight: 700; color: #475569; }
+        select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-weight: 600; outline: none; background: white; cursor: pointer; }
+        .badge-status { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+        .status-OPEN { background: #fef3c7; color: #b45309; }
+        .status-IN_PROGRESS { background: #e0e7ff; color: #3730a3; }
+        .status-RESOLVED { background: #dcfce7; color: #15803d; }
+        .status-CLOSED { background: #f1f5f9; color: #475569; }
+        .search-bar { display: flex; gap: 12px; margin-bottom: 16px; }
+        .search-bar input { flex: 1; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; }
+        @media(max-width:800px) { .sidebar { display: none; } .main { margin-left: 0; width: 100%; padding: 20px; } .stats { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+            <span>SupportAI</span>
+        </div>
+        <button class="nav-item" onclick="location.href='/admin/dashboard.html'"><span class="nav-icon">▦</span>Dashboard</button>
+        <button class="nav-item active" onclick="location.href='/admin/tickets.html'"><span class="nav-icon">▣</span>Tickets</button>
+        <button class="nav-item" onclick="location.href='/admin/knowledge.html'"><span class="nav-icon">▤</span>Knowledge Base</button>
+        <button class="nav-item" onclick="location.href='/admin/analytics.html'"><span class="nav-icon">◈</span>Call Analytics</button>
+        <button class="nav-item" onclick="location.href='/admin/account.html'"><span class="nav-icon">◯</span>Account</button>
+        <div class="sidebar-bottom">
+            <button class="logout-btn" onclick="logout()">↪ Sign Out</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div>
+                <h1>Ticket Management Console</h1>
+                <p>Monitor, prioritize, and update customer support escalations.</p>
+            </div>
+            <div class="user-box">
+                <div class="avatar" data-avatar>A</div>
+                <div>
+                    <strong data-user-name>Administrator</strong>
+                    <div class="muted" data-user-role>ADMIN</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat"><small>Total Tickets</small><strong id="total">0</strong></div>
+            <div class="stat"><small>Open Tickets</small><strong id="open" style="color:#d97706;">0</strong></div>
+            <div class="stat"><small>In Progress</small><strong id="inProgress" style="color:#2563eb;">0</strong></div>
+            <div class="stat"><small>Resolved</small><strong id="resolved" style="color:#16a34a;">0</strong></div>
+        </div>
+
+        <section class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <div>
+                    <h2>All Customer Tickets</h2>
+                    <p class="muted">Live synchronization with database. Changes save immediately.</p>
+                </div>
+                <button class="btn" onclick="loadTickets()">↻ Refresh</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by customer ID or issue text..." oninput="filterTickets()">
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>Customer</th>
+                            <th>Issue Description</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows">
+                        <tr><td colspan="7">Loading tickets...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+    const userData = localStorage.getItem("user") || sessionStorage.getItem("user");
+    if (!token || !userData) { location.href = "/login.html"; }
+
+    let user = null;
+    try { user = JSON.parse(userData); } catch(e) { logout(); }
+    if (user && user.role !== "ADMIN") { location.href = "/customer/dashboard.html"; }
+
+    if (user) {
+        document.querySelectorAll("[data-user-name]").forEach(e => e.textContent = user.name || "Administrator");
+        document.querySelectorAll("[data-user-role]").forEach(e => e.textContent = user.role || "ADMIN");
+        document.querySelectorAll("[data-avatar]").forEach(e => e.textContent = (user.name || "A").charAt(0).toUpperCase());
+    }
+
+    function logout() {
+        localStorage.clear();
+        sessionStorage.clear();
+        location.href = "/login.html";
+    }
+
+    function esc(v) {
+        return String(v ?? "").replace(/[&<>"']/g, m => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+        }[m]));
+    }
+
+    let allTickets = [];
+
+    async function loadTickets() {
+        const body = document.getElementById("rows");
+        body.innerHTML = '<tr><td colspan="7">Loading tickets...</td></tr>';
+        try {
+            const r = await fetch("/api/tickets", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            if (r.status === 401) return logout();
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.detail || "Failed to load tickets");
+
+            allTickets = d.tickets || [];
+            updateStats(allTickets);
+            renderTickets(allTickets);
+        } catch (e) {
+            body.innerHTML = `<tr><td colspan="7" style="color:#ef4444; padding:20px;">Error: ${esc(e.message)}</td></tr>`;
+        }
+    }
+
+    function updateStats(ts) {
+        document.getElementById("total").textContent = ts.length;
+        document.getElementById("open").textContent = ts.filter(t => String(t.status || "").toUpperCase() === "OPEN").length;
+        document.getElementById("inProgress").textContent = ts.filter(t => ["IN_PROGRESS", "PENDING"].includes(String(t.status || "").toUpperCase())).length;
+        document.getElementById("resolved").textContent = ts.filter(t => ["RESOLVED", "CLOSED"].includes(String(t.status || "").toUpperCase())).length;
+    }
+
+    function renderTickets(ts) {
+        const body = document.getElementById("rows");
+        if (!ts.length) {
+            body.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:#6b7280;">No support tickets found.</td></tr>';
+            return;
+        }
+
+        const allowedPriorities = ["LOW", "MEDIUM", "HIGH", "URGENT"];
+        const allowedStatuses = ["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"];
+
+        body.innerHTML = ts.map(t => {
+            const id = t.ticket_id || t.id;
+            let p = String(t.priority || "MEDIUM").toUpperCase();
+            if (p === "CRITICAL") p = "URGENT";
+            let s = String(t.status || "OPEN").toUpperCase();
+            if (s === "PENDING") s = "IN_PROGRESS";
+
+            return `<tr>
+                <td><strong>#${esc(id)}</strong></td>
+                <td><span style="font-weight:600;">${esc(t.user_id)}</span></td>
+                <td style="max-width:320px; line-height:1.4;">${esc(t.issue || t.description || "—")}</td>
+                <td>
+                    <select onchange="updateTicket(${id}, 'priority', this.value)">
+                        ${allowedPriorities.map(x => `<option value="${x}" ${p === x ? "selected" : ""}>${x}</option>`).join("")}
+                    </select>
+                </td>
+                <td>
+                    <select onchange="updateTicket(${id}, 'status', this.value)">
+                        ${allowedStatuses.map(x => `<option value="${x}" ${s === x ? "selected" : ""}>${x}</option>`).join("")}
+                    </select>
+                </td>
+                <td style="color:#64748b; font-size:12px;">${esc((t.created_at || "").replace("T", " ").slice(0, 19))}</td>
+                <td>
+                    <button class="btn danger" style="padding:6px 10px; font-size:11px;" onclick="deleteTicketItem(${id})">Delete</button>
+                </td>
+            </tr>`;
+        }).join("");
+    }
+
+    function filterTickets() {
+        const query = document.getElementById("searchInput").value.toLowerCase().trim();
+        if (!query) {
+            renderTickets(allTickets);
+            return;
+        }
+        const filtered = allTickets.filter(t => 
+            String(t.ticket_id).includes(query) ||
+            String(t.user_id || "").toLowerCase().includes(query) ||
+            String(t.issue || "").toLowerCase().includes(query)
+        );
+        renderTickets(filtered);
+    }
+
+    async function updateTicket(id, type, value) {
+        try {
+            const r = await fetch(`/api/tickets/${encodeURIComponent(id)}/${type}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ [type]: value })
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.detail || "Update failed");
+            loadTickets();
+        } catch (e) {
+            alert(e.message);
+            loadTickets();
+        }
+    }
+
+    async function deleteTicketItem(id) {
+        if (!confirm(`Are you sure you want to delete Ticket #${id}?`)) return;
+        try {
+            const r = await fetch(`/api/tickets/${encodeURIComponent(id)}`, {
+                method: "DELETE",
+                headers: { "Authorization": "Bearer " + token }
+            });
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.detail || "Delete failed");
+            loadTickets();
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    loadTickets();
+</script>
+</body>
+</html>

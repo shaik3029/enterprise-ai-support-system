@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Support | SupportAI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
+            background: #f6f8fc;
+            color: #172033;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+
+        .header {
+            height: 72px;
+            background: white;
+            border-bottom: 1px solid #e5e9f2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #315eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .brand-subtitle {
+            font-size: 9px;
+            color: #7b8497;
+        }
+
+        .back-button {
+            border: none;
+            background: #edf2ff;
+            color: #315eea;
+            padding: 9px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: #dfe7ff;
+        }
+
+        /* CHAT AREA */
+
+        .chat-wrapper {
+            width: min(1000px, 94%);
+            margin: 30px auto;
+            background: white;
+            border: 1px solid #e5e9f2;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(30, 50, 100, 0.06);
+
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 132px);
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e9f2;
+        }
+
+        .chat-header h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .chat-header p {
+            color: #7b8497;
+            font-size: 12px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            color: #16a34a;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+        }
+
+        /* MESSAGES */
+
+        .messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .ai-message {
+            background: white;
+            border: 1px solid #e5e9f2;
+            margin-right: auto;
+        }
+
+        .user-message {
+            background: #315eea;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-message {
+            border-bottom-left-radius: 4px;
+        }
+
+        .agent-label {
+            font-size: 10px;
+            color: #7b8497;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        /* INPUT */
+
+        .input-area {
+            padding: 18px;
+            border-top: 1px solid #e5e9f2;
+            background: white;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        #messageInput {
+            flex: 1;
+            border: 1px solid #d9dfeb;
+            border-radius: 10px;
+            padding: 13px 14px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        #messageInput:focus {
+            border-color: #315eea;
+            box-shadow: 0 0 0 3px rgba(49, 94, 234, 0.08);
+        }
+
+        #sendButton {
+            border: none;
+            background: #315eea;
+            color: white;
+            padding: 0 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #sendButton:hover {
+            background: #244ed0;
+        }
+
+        #sendButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .hint {
+            margin-top: 8px;
+            font-size: 10px;
+            color: #9aa3b5;
+        }
+
+        @media (max-width: 650px) {
+
+            .header {
+                padding: 0 16px;
+            }
+
+            .chat-wrapper {
+                width: 100%;
+                margin: 0;
+                height: calc(100vh - 72px);
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+
+            .message {
+                max-width: 88%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ✦
+            </div>
+
+            <div>
+                <div class="brand-name">
+                    SupportAI
+                </div>
+
+                <div class="brand-subtitle">
+                    Enterprise Intelligence
+                </div>
+            </div>
+
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <button
+                class="back-button"
+                style="background:#fef2f2; color:#dc2626; border:1px solid #fecaca;"
+                onclick="clearChat()"
+            >
+                🗑 Clear History
+            </button>
+            <button
+                class="back-button"
+                onclick="goBack()"
+            >
+                ← Dashboard
+            </button>
+        </div>
+
+    </header>
+
+
+    <!-- CHAT -->
+
+    <main class="chat-wrapper">
+
+        <div class="chat-header">
+
+            <h1>
+                AI Support
+            </h1>
+
+            <p>
+                Ask questions and get AI-powered answers from the enterprise knowledge base.
+            </p>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                AI Support Online
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+
+        <div
+            class="messages"
+            id="messages"
+        >
+
+            <div class="message ai-message">
+
+                <div class="agent-label">
+                    SupportAI
+                </div>
+
+                Hello! 👋
+
+                I'm your AI support assistant.
+
+                Ask me anything about the enterprise knowledge base, policies, accounts, or support issues.
+
+            </div>
+
+        </div>
+
+
+        <!-- INPUT -->
+
+        <div class="input-area">
+
+            <div class="input-row">
+
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="Type your question..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="sendButton"
+                    onclick="sendMessage()"
+                >
+                    Send
+                </button>
+
+            </div>
+
+            <div class="hint">
+                Press Enter to send your message.
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    // ==========================================
+    // AUTHENTICATION
+    // ==========================================
+
+    const token =
+        localStorage.getItem("access_token") ||
+        sessionStorage.getItem("access_token");
+
+    const userData =
+        localStorage.getItem("user") ||
+        sessionStorage.getItem("user");
+
+
+    if (!token || !userData) {
+
+        window.location.href = "/login.html";
+
+    }
+
+
+    let user = null;
+
+    try {
+
+        user = JSON.parse(userData);
+
+    } catch (error) {
+
+        console.error("Invalid user data.");
+
+        window.location.href = "/login.html";
+
+    }
+
+
+    // ==========================================
+    // DOM ELEMENTS
+    // ==========================================
+
+    const messages =
+        document.getElementById("messages");
+
+    const messageInput =
+        document.getElementById("messageInput");
+
+    const sendButton =
+        document.getElementById("sendButton");
+
+
+    // ==========================================
+    // ADD MESSAGE
+    // ==========================================
+
+    function addMessage(
+        text,
+        type,
+        agent = null
+    ) {
+
+        const message =
+            document.createElement("div");
+
+        message.className =
+            `message ${type}`;
+
+
+        if (type === "ai-message") {
+
+            const label =
+                document.createElement("div");
+
+            label.className =
+                "agent-label";
+
+            label.textContent =
+                agent
+                    ? `SupportAI • ${agent}`
+                    : "SupportAI";
+
+            message.appendChild(label);
+
+        }
+
+
+        const content =
+            document.createElement("div");
+
+        content.textContent = text;
+
+        message.appendChild(content);
+
+
+        messages.appendChild(message);
+
+
+        messages.scrollTop =
+            messages.scrollHeight;
+    }
+
+
+    // ==========================================
+    // SEND MESSAGE
+    // ==========================================
+
+    async function sendMessage() {
+
+        const query =
+            messageInput.value.trim();
+
+
+        if (!query) {
+            return;
+        }
+
+
+        // Show user message
+
+        addMessage(
+            query,
+            "user-message"
+        );
+
+
+        messageInput.value = "";
+
+        sendButton.disabled = true;
+
+        sendButton.textContent =
+            "Thinking...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/api/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                `Bearer ${token}`
+                        },
+
+                        body: JSON.stringify({
+
+                            user_id:
+                                user.user_id,
+
+                            query:
+                                query
+
+                        })
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.detail ||
+                    "AI request failed."
+                );
+
+            }
+
+
+            addMessage(
+                data.response,
+                "ai-message",
+                data.agent
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Chat error:",
+                error
+            );
+
+
+            addMessage(
+                "Sorry, I couldn't process your request. Please try again.",
+                "ai-message"
+            );
+
+        }
+
+
+        sendButton.disabled = false;
+
+        sendButton.textContent =
+            "Send";
+
+        messageInput.focus();
+    }
+
+
+    // ==========================================
+    // ENTER KEY
+    // ==========================================
+
+    messageInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+    // ==========================================
+    // BACK TO DASHBOARD
+    // ==========================================
+
+    function goBack() {
+
+        window.location.href =
+            "/customer/dashboard.html";
+
+    }
+
+    async function loadHistory() {
+        try {
+            const res = await fetch("/api/chat/history", {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.status === 401) { window.location.href = "/login.html"; return; }
+            const data = await res.json();
+            if (res.ok && data.history && data.history.length > 0) {
+                // Clear initial placeholder message if history exists
+                messages.innerHTML = "";
+                data.history.forEach(item => {
+                    if (item.role === "user") {
+                        addMessage(item.content, "user-message");
+                    } else {
+                        addMessage(item.content, "ai-message", item.agent_name || "SupportAI");
+                    }
+                });
+            }
+        } catch (err) {
+            console.warn("Could not load history:", err);
+        }
+    }
+
+    async function clearChat() {
+        if (!confirm("Are you sure you want to clear your support chat history?")) return;
+        try {
+            const res = await fetch("/api/chat/history", {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.ok) {
+                messages.innerHTML = `
+                    <div class="message ai-message">
+                        <div class="agent-label">SupportAI</div>
+                        Chat history cleared. How can I help you today?
+                    </div>
+                `;
+            }
+        } catch (err) {
+            alert("Failed to clear chat: " + err.message);
+        }
+    }
+
+    loadHistory();
+
+</script>
+
+</body>
+
+</html>

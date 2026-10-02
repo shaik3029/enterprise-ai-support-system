@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | SupportAI</title>
+
+<style>
+:root{
+    --bg:#f6f8fc;
+    --surface:#fff;
+    --text:#111827;
+    --muted:#64748b;
+    --line:#e5e7eb;
+    --blue:#2563eb;
+    --blue-dark:#1d4ed8;
+    --purple:#7c3aed;
+    --shadow:0 24px 70px rgba(15,23,42,.12);
+}
+
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    min-height:100%;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:var(--text);
+}
+
+body{
+    background:
+        radial-gradient(circle at 10% 10%,rgba(37,99,235,.10),transparent 30%),
+        radial-gradient(circle at 90% 85%,rgba(124,58,237,.09),transparent 30%),
+        var(--bg);
+}
+
+.auth-page{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.95fr) minmax(560px,1.05fr);
+}
+
+.auth-brand-panel{
+    position:relative;
+    overflow:hidden;
+    padding:48px 58px;
+    color:white;
+    background:
+        radial-gradient(circle at 85% 18%,rgba(96,165,250,.30),transparent 28%),
+        radial-gradient(circle at 15% 90%,rgba(124,58,237,.25),transparent 32%),
+        linear-gradient(145deg,#0b1224 0%,#111c38 52%,#182554 100%);
+}
+
+.auth-brand-panel:after{
+    content:"";
+    position:absolute;
+    width:360px;
+    height:360px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:50%;
+    right:-160px;
+    bottom:-130px;
+    box-shadow:0 0 0 70px rgba(255,255,255,.025),0 0 0 140px rgba(255,255,255,.018);
+}
+
+.brand{
+    position:relative;
+    z-index:2;
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    color:white;
+    text-decoration:none;
+}
+
+.brand-icon{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border-radius:13px;
+    color:white;
+    background:linear-gradient(135deg,#3b82f6,#7c3aed);
+    box-shadow:0 10px 30px rgba(59,130,246,.30);
+    font-size:20px;
+}
+
+.brand-text{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.brand-name{
+    font-size:19px;
+    font-weight:800;
+}
+
+.brand-subtitle{
+    font-size:11px;
+    color:#aebbd3;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+}
+
+.brand-content{
+    position:relative;
+    z-index:2;
+    max-width:520px;
+    margin-top:22vh;
+}
+
+.eyebrow{
+    display:inline-flex;
+    padding:8px 12px;
+    border:1px solid rgba(147,197,253,.20);
+    border-radius:999px;
+    background:rgba(59,130,246,.10);
+    color:#bfdbfe;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1.2px;
+}
+
+.brand-content h1{
+    margin:24px 0 18px;
+    font-size:clamp(42px,4vw,64px);
+    line-height:1.02;
+    letter-spacing:-2.8px;
+}
+
+.brand-content h1 span{
+    color:#93c5fd;
+}
+
+.brand-content p{
+    margin:0;
+    max-width:520px;
+    color:#b8c4d9;
+    font-size:16px;
+    line-height:1.75;
+}
+
+.security-note{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:max-content;
+    margin-top:30px;
+    padding:12px 15px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:13px;
+    background:rgba(255,255,255,.055);
+}
+
+.security-icon{
+    width:28px;
+    height:28px;
+    display:grid;
+    place-items:center;
+    border-radius:8px;
+    background:rgba(96,165,250,.14);
+    color:#60a5fa;
+    font-weight:900;
+}
+
+.security-note strong{
+    display:block;
+    font-size:13px;
+}
+
+.security-note span{
+    display:block;
+    margin-top:2px;
+    color:#aebbd3;
+    font-size:11px;
+}
+
+.auth-form-panel{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:42px;
+}
+
+.auth-card{
+    width:min(100%,610px);
+    background:rgba(255,255,255,.95);
+    border:1px solid rgba(226,232,240,.95);
+    border-radius:28px;
+    padding:42px;
+    box-shadow:var(--shadow);
+}
+
+.mobile-brand{
+    display:none;
+}
+
+.form-heading .section-label{
+    color:var(--blue);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.5px;
+}
+
+.form-heading h2{
+    margin:10px 0 9px;
+    font-size:32px;
+    line-height:1.15;
+    letter-spacing:-1px;
+}
+
+.form-heading p{
+    margin:0;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+}
+
+#signupForm{
+    margin-top:28px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    color:#334155;
+    font-size:13px;
+    font-weight:800;
+}
+
+.form-group input{
+    width:100%;
+    height:50px;
+    border:1px solid #dbe1ea;
+    border-radius:12px;
+    outline:none;
+    padding:0 15px;
+    color:var(--text);
+    background:#fff;
+    font-size:14px;
+    transition:.2s ease;
+}
+
+.form-group input:focus{
+    border-color:#60a5fa;
+    box-shadow:0 0 0 4px rgba(37,99,235,.08);
+}
+
+.password-wrapper{
+    position:relative;
+}
+
+.password-wrapper input{
+    padding-right:65px;
+}
+
+.password-toggle{
+    position:absolute;
+    top:50%;
+    right:12px;
+    transform:translateY(-50%);
+    border:0;
+    background:none;
+    color:var(--blue);
+    cursor:pointer;
+    font-size:12px;
+    font-weight:800;
+}
+
+.password-hint{
+    margin-top:6px;
+    color:#94a3b8;
+    font-size:11px;
+}
+
+.signup-note{
+    margin:20px 0;
+    padding:13px 15px;
+    border:1px solid #dbe7ff;
+    border-radius:12px;
+    background:#f6f9ff;
+    color:#64748b;
+    font-size:12px;
+    line-height:1.55;
+}
+
+.signup-note strong{
+    color:var(--blue);
+}
+
+.login-message{
+    min-height:20px;
+    margin-bottom:8px;
+    font-size:13px;
+}
+
+.login-button{
+    width:100%;
+    height:52px;
+    border:0;
+    border-radius:13px;
+    color:white;
+    background:linear-gradient(135deg,var(--blue),#4f46e5);
+    font-size:14px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 12px 25px rgba(37,99,235,.20);
+    transition:.2s ease;
+}
+
+.login-button:hover:not(:disabled){
+    transform:translateY(-1px);
+    background:linear-gradient(135deg,var(--blue-dark),#4338ca);
+}
+
+.login-button:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+
+.auth-divider{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin:25px 0;
+    color:#94a3b8;
+    font-size:11px;
+    font-weight:800;
+}
+
+.auth-divider:before,
+.auth-divider:after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+}
+
+.signup-prompt{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.signup-prompt a{
+    color:var(--blue);
+    font-weight:800;
+    text-decoration:none;
+}
+
+.signup-prompt a:hover{
+    text-decoration:underline;
+}
+
+.back-home{
+    display:block;
+    margin-top:22px;
+    text-align:center;
+    color:#64748b;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:700;
+}
+
+.back-home:hover{
+    color:var(--blue);
+}
+
+@media(max-width:950px){
+    .auth-page{
+        grid-template-columns:1fr;
+    }
+
+    .auth-brand-panel{
+        display:none;
+    }
+
+    .auth-form-panel{
+        min-height:100vh;
+        padding:24px;
+    }
+
+    .auth-card{
+        padding:30px 24px;
+        border-radius:22px;
+    }
+
+    .mobile-brand{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        color:var(--text);
+        text-decoration:none;
+        margin-bottom:30px;
+    }
+
+    .mobile-brand .brand-icon{
+        width:38px;
+        height:38px;
+    }
+}
+
+@media(max-width:520px){
+    .auth-form-panel{
+        padding:12px;
+    }
+
+    .auth-card{
+        padding:24px 18px;
+    }
+
+    .form-heading h2{
+        font-size:27px;
+    }
+}
+</style>
+</head>
+
+<body class="auth-page">
+
+<section class="auth-brand-panel">
+    <a href="/" class="brand">
+        <div class="brand-icon">✦</div>
+        <div class="brand-text">
+            <div class="brand-name">SupportAI</div>
+            <div class="brand-subtitle">Enterprise Intelligence</div>
+        </div>
+    </a>
+
+    <div class="brand-content">
+        <div class="eyebrow">CUSTOMER SUPPORT PLATFORM</div>
+
+        <h1>
+            Create your
+            <span>SupportAI</span>
+            account.
+        </h1>
+
+        <p>
+            Get intelligent support, manage your tickets and interact
+            with enterprise AI assistance from one secure workspace.
+        </p>
+
+        <div class="security-note">
+            <div class="security-icon">✓</div>
+            <div>
+                <strong>Secure account</strong>
+                <span>Your password is securely protected.</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="auth-form-panel">
+<div class="auth-card">
+
+    <a href="/" class="mobile-brand">
+        <div class="brand-icon">✦</div>
+        <strong>SupportAI</strong>
+    </a>
+
+    <div class="form-heading">
+        <div class="section-label">GET STARTED</div>
+        <h2>Create your account</h2>
+        <p>Enter your details to create a customer account.</p>
+    </div>
+
+    <form id="signupForm">
+
+        <div class="form-group">
+            <label for="userId">User ID</label>
+            <input
+                type="text"
+                id="userId"
+                name="userId"
+                placeholder="Choose your User ID"
+                autocomplete="username"
+                required
+            >
+            <div class="password-hint">
+                Example: shaik, charan123, customer01
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                autocomplete="name"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    autocomplete="new-password"
+                    required
+                >
+                <button type="button" class="password-toggle" id="togglePassword">Show</button>
+            </div>
+            <div class="password-hint">Use at least 6 characters.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="password-wrapper">
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Re-enter your password"
+                    autocomplete="new-password"
+                    required
+                >
+                <button type="button" class="password-toggle" id="toggleConfirmPassword">Show</button>
+            </div>
+        </div>
+
+        <div class="signup-note">
+            <strong>Account type: Customer</strong><br>
+            Public signup creates customer accounts only.
+            Administrator accounts are managed separately.
+        </div>
+
+        <div id="signupMessage" class="login-message" role="alert"></div>
+
+        <button type="submit" id="signupButton" class="login-button">
+            <span id="signupButtonText">Create Account</span>
+        </button>
+
+    </form>
+
+    <div class="auth-divider"><span>OR</span></div>
+
+    <div class="signup-prompt">
+        Already have an account?
+        <a href="/login.html">Sign in</a>
+    </div>
+
+    <a href="/" class="back-home">← Back to SupportAI</a>
+
+</div>
+</section>
+
+<script>
+const signupForm = document.getElementById("signupForm");
+const userIdInput = document.getElementById("userId");
+const nameInput = document.getElementById("name");
+const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirmPassword");
+const togglePassword = document.getElementById("togglePassword");
+const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+const signupMessage = document.getElementById("signupMessage");
+const signupButton = document.getElementById("signupButton");
+const signupButtonText = document.getElementById("signupButtonText");
+
+togglePassword.addEventListener("click", () => {
+    const hidden = passwordInput.type === "password";
+    passwordInput.type = hidden ? "text" : "password";
+    togglePassword.textContent = hidden ? "Hide" : "Show";
+});
+
+toggleConfirmPassword.addEventListener("click", () => {
+    const hidden = confirmPasswordInput.type === "password";
+    confirmPasswordInput.type = hidden ? "text" : "password";
+    toggleConfirmPassword.textContent = hidden ? "Hide" : "Show";
+});
+
+signupForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    signupMessage.textContent = "";
+    signupMessage.style.color = "#d64545";
+
+    const userId = userIdInput.value.trim();
+    const name = nameInput.value.trim();
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+
+    if (!userId) {
+        signupMessage.textContent = "Please enter a User ID.";
+        return;
+    }
+
+    if (password.length < 6) {
+        signupMessage.textContent = "Password must contain at least 6 characters.";
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        signupMessage.textContent = "Passwords do not match.";
+        return;
+    }
+
+    signupButton.disabled = true;
+    signupButtonText.textContent = "Creating account...";
+
+    try {
+        const response = await fetch("/api/auth/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                name: name,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail || "Unable to create account."
+            );
+        }
+
+        signupMessage.textContent =
+            "Account created successfully. Redirecting to login...";
+        signupMessage.style.color = "#258a54";
+
+        setTimeout(() => {
+            window.location.href = "/login.html";
+        }, 1200);
+
+    } catch (error) {
+        signupMessage.textContent = error.message;
+        signupMessage.style.color = "#d64545";
+        signupButton.disabled = false;
+        signupButtonText.textContent = "Create Account";
+    }
+});
+</script>
+
+</body>
+</html>

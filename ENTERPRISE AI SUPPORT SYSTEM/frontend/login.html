@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | SupportAI</title>
+
+<style>
+:root{
+    --bg:#f6f8fc;
+    --surface:#ffffff;
+    --text:#111827;
+    --muted:#64748b;
+    --line:#e5e7eb;
+    --blue:#2563eb;
+    --blue-dark:#1d4ed8;
+    --purple:#7c3aed;
+    --shadow:0 24px 70px rgba(15,23,42,.12);
+}
+
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    min-height:100%;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:var(--text);
+}
+
+body{
+    background:
+        radial-gradient(circle at 10% 10%,rgba(37,99,235,.10),transparent 30%),
+        radial-gradient(circle at 90% 85%,rgba(124,58,237,.09),transparent 30%),
+        var(--bg);
+}
+
+.auth-page{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.95fr) minmax(560px,1.05fr);
+}
+
+.auth-brand-panel{
+    position:relative;
+    overflow:hidden;
+    padding:48px 58px;
+    color:white;
+    background:
+        radial-gradient(circle at 85% 18%,rgba(96,165,250,.30),transparent 28%),
+        radial-gradient(circle at 15% 90%,rgba(124,58,237,.25),transparent 32%),
+        linear-gradient(145deg,#0b1224 0%,#111c38 52%,#182554 100%);
+}
+
+.auth-brand-panel:after{
+    content:"";
+    position:absolute;
+    width:360px;
+    height:360px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:50%;
+    right:-160px;
+    bottom:-130px;
+    box-shadow:0 0 0 70px rgba(255,255,255,.025),0 0 0 140px rgba(255,255,255,.018);
+}
+
+.brand{
+    position:relative;
+    z-index:2;
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    color:white;
+    text-decoration:none;
+}
+
+.brand-icon{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border-radius:13px;
+    color:white;
+    background:linear-gradient(135deg,#3b82f6,#7c3aed);
+    box-shadow:0 10px 30px rgba(59,130,246,.30);
+    font-size:20px;
+}
+
+.brand-text{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.brand-name{
+    font-size:19px;
+    font-weight:800;
+    letter-spacing:-.3px;
+}
+
+.brand-subtitle{
+    font-size:11px;
+    color:#aebbd3;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+}
+
+.brand-content{
+    position:relative;
+    z-index:2;
+    max-width:520px;
+    margin-top:22vh;
+}
+
+.eyebrow{
+    display:inline-flex;
+    padding:8px 12px;
+    border:1px solid rgba(147,197,253,.20);
+    border-radius:999px;
+    background:rgba(59,130,246,.10);
+    color:#bfdbfe;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1.2px;
+}
+
+.brand-content h1{
+    margin:24px 0 18px;
+    font-size:clamp(42px,4vw,66px);
+    line-height:1.02;
+    letter-spacing:-2.8px;
+    max-width:560px;
+}
+
+.brand-content p{
+    margin:0;
+    max-width:520px;
+    color:#b8c4d9;
+    font-size:16px;
+    line-height:1.75;
+}
+
+.security-note{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    margin-top:30px;
+    padding:11px 15px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:12px;
+    background:rgba(255,255,255,.055);
+    color:#e2e8f0;
+    font-size:13px;
+    font-weight:700;
+}
+
+.security-note span{
+    color:#60a5fa;
+}
+
+.auth-form-panel{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:42px;
+}
+
+.auth-card{
+    width:min(100%,650px);
+    background:rgba(255,255,255,.94);
+    border:1px solid rgba(226,232,240,.95);
+    border-radius:28px;
+    padding:44px;
+    box-shadow:var(--shadow);
+}
+
+.mobile-brand{display:none}
+
+.form-heading .section-label{
+    color:var(--blue);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.5px;
+}
+
+.form-heading h2{
+    margin:10px 0 10px;
+    font-size:32px;
+    line-height:1.15;
+    letter-spacing:-1px;
+}
+
+.form-heading p{
+    margin:0;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+}
+
+.role-choice-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-top:30px;
+}
+
+.role-choice{
+    border:1px solid var(--line);
+    background:white;
+    border-radius:20px;
+    padding:24px;
+    text-align:left;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.role-choice:hover{
+    transform:translateY(-4px);
+    border-color:#bfdbfe;
+    box-shadow:0 18px 35px rgba(15,23,42,.09);
+}
+
+.role-choice.admin:hover{
+    border-color:#ddd6fe;
+}
+
+.role-choice-icon{
+    width:52px;
+    height:52px;
+    display:grid;
+    place-items:center;
+    border-radius:15px;
+    background:#eff6ff;
+    color:var(--blue);
+    font-size:22px;
+    margin-bottom:20px;
+}
+
+.role-choice.admin .role-choice-icon{
+    background:#f5f3ff;
+    color:var(--purple);
+}
+
+.role-choice strong{
+    display:block;
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.role-choice span{
+    display:block;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.6;
+}
+
+.role-choice-arrow{
+    margin-top:20px!important;
+    color:var(--blue)!important;
+    font-weight:800;
+}
+
+.role-choice.admin .role-choice-arrow{
+    color:var(--purple)!important;
+}
+
+.auth-divider{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin:28px 0;
+    color:#94a3b8;
+    font-size:12px;
+}
+
+.auth-divider:before,
+.auth-divider:after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+}
+
+.signup-prompt{
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.signup-prompt a{
+    color:var(--blue);
+    font-weight:800;
+    text-decoration:none;
+}
+
+.back-home{
+    display:block;
+    margin-top:24px;
+    text-align:center;
+    color:#64748b;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:700;
+}
+
+.back-home:hover{color:var(--blue)}
+
+.hidden{display:none!important}
+
+.selected-role{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:#eff6ff;
+    color:var(--blue);
+    font-size:12px;
+    font-weight:900;
+}
+
+.selected-role.admin{
+    background:#f5f3ff;
+    color:var(--purple);
+}
+
+.change-role{
+    margin-left:10px;
+    border:0;
+    background:none;
+    color:#64748b;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:800;
+}
+
+.change-role:hover{color:var(--blue)}
+
+#loginForm{margin-top:28px}
+
+.form-group{margin-bottom:20px}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    color:#334155;
+    font-size:13px;
+    font-weight:800;
+}
+
+.form-group input{
+    width:100%;
+    height:50px;
+    border:1px solid #dbe1ea;
+    border-radius:12px;
+    outline:none;
+    padding:0 15px;
+    color:var(--text);
+    background:#fff;
+    font-size:14px;
+    transition:.2s ease;
+}
+
+.form-group input:focus{
+    border-color:#60a5fa;
+    box-shadow:0 0 0 4px rgba(37,99,235,.08);
+}
+
+.password-wrapper{
+    position:relative;
+}
+
+.password-wrapper input{padding-right:65px}
+
+.password-toggle{
+    position:absolute;
+    top:50%;
+    right:12px;
+    transform:translateY(-50%);
+    border:0;
+    background:none;
+    color:var(--blue);
+    cursor:pointer;
+    font-size:12px;
+    font-weight:800;
+}
+
+.remember-row{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    color:#64748b;
+    font-size:13px;
+    margin:8px 0 16px;
+}
+
+.remember-row input{
+    width:15px;
+    height:15px;
+    accent-color:var(--blue);
+}
+
+.login-message{
+    min-height:20px;
+    margin-bottom:8px;
+    color:#dc2626;
+    font-size:13px;
+}
+
+.login-button{
+    width:100%;
+    height:52px;
+    border:0;
+    border-radius:13px;
+    color:white;
+    background:linear-gradient(135deg,var(--blue),#4f46e5);
+    font-size:14px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 12px 25px rgba(37,99,235,.20);
+    transition:.2s ease;
+}
+
+.login-button:hover{
+    transform:translateY(-1px);
+    background:linear-gradient(135deg,var(--blue-dark),#4338ca);
+}
+
+@media(max-width:950px){
+    .auth-page{grid-template-columns:1fr}
+    .auth-brand-panel{display:none}
+    .auth-form-panel{
+        min-height:100vh;
+        padding:24px;
+    }
+    .auth-card{
+        padding:30px 24px;
+        border-radius:22px;
+    }
+    .mobile-brand{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        color:var(--text);
+        text-decoration:none;
+        margin-bottom:32px;
+    }
+    .mobile-brand .brand-icon{
+        width:38px;
+        height:38px;
+    }
+    .role-choice-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:520px){
+    .auth-form-panel{padding:12px}
+    .auth-card{padding:24px 18px}
+    .form-heading h2{font-size:27px}
+}
+</style>
+</head>
+
+<body>
+
+<main class="auth-page">
+
+<section class="auth-brand-panel">
+    <a href="/" class="brand">
+        <div class="brand-icon">✦</div>
+        <div class="brand-text">
+            <span class="brand-name">SupportAI</span>
+            <span class="brand-subtitle">Enterprise Intelligence</span>
+        </div>
+    </a>
+
+    <div class="brand-content">
+        <div class="eyebrow">ENTERPRISE AI SUPPORT</div>
+        <h1>Intelligent support starts here.</h1>
+        <p>
+            Access your AI-powered customer support workspace,
+            knowledge intelligence, tickets and call analytics.
+        </p>
+        <div class="security-note">
+            <span>✓</span> Secure role-based access
+        </div>
+    </div>
+</section>
+
+<section class="auth-form-panel">
+<div class="auth-card">
+
+    <a href="/" class="mobile-brand">
+        <div class="brand-icon">✦</div>
+        <strong>SupportAI</strong>
+    </a>
+
+    <div id="roleSelection">
+        <div class="form-heading">
+            <span class="section-label">WELCOME TO SUPPORTAI</span>
+            <h2>Choose your login</h2>
+            <p>Select the workspace you want to access.</p>
+        </div>
+
+        <div class="role-choice-grid">
+            <button type="button" class="role-choice" onclick="selectRole('customer')">
+                <div class="role-choice-icon">👤</div>
+                <strong>Customer Login</strong>
+                <span>Get AI support, ask questions, create tickets and track requests.</span>
+                <span class="role-choice-arrow">Continue as Customer →</span>
+            </button>
+
+            <button type="button" class="role-choice admin" onclick="selectRole('admin')">
+                <div class="role-choice-icon">🛡️</div>
+                <strong>Admin Login</strong>
+                <span>Manage tickets, knowledge, call intelligence and users.</span>
+                <span class="role-choice-arrow">Continue as Admin →</span>
+            </button>
+        </div>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <p class="signup-prompt">
+            New customer?
+            <a href="signup.html">Create a customer account</a>
+        </p>
+
+        <a href="/" class="back-home">← Back to SupportAI</a>
+    </div>
+
+    <div id="loginFormView" class="hidden">
+
+        <div>
+            <span id="selectedRoleBadge" class="selected-role">👤 Customer Access</span>
+            <button type="button" class="change-role" onclick="showRoleSelection()">← Change login type</button>
+        </div>
+
+        <div class="form-heading" style="margin-top:24px">
+            <span class="section-label" id="loginSectionLabel">CUSTOMER ACCESS</span>
+            <h2 id="loginHeading">Customer Login</h2>
+            <p id="loginDescription">Sign in to your customer support workspace.</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="userId">User ID</label>
+                <input type="text" id="userId" name="userId" placeholder="e.g. USR102" autocomplete="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+                    <button type="button" id="togglePassword" class="password-toggle">Show</button>
+                </div>
+            </div>
+
+            <label class="remember-row">
+                <input type="checkbox" id="rememberMe">
+                <span>Remember me</span>
+            </label>
+
+            <div id="loginMessage" class="login-message" role="alert"></div>
+
+            <button type="submit" id="loginButton" class="login-button">
+                <span id="loginButtonText">Sign In as Customer</span>
+            </button>
+        </form>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <p class="signup-prompt" id="signupPrompt">
+            Don't have a customer account?
+            <a href="signup.html">Create a customer account</a>
+        </p>
+
+        <a href="/" class="back-home">← Back to SupportAI</a>
+    </div>
+
+</div>
+</section>
+
+</main>
+
+<script src="js/auth.js"></script>
+
+<script>
+let selectedRole = null;
+
+function selectRole(role){
+    selectedRole = role;
+
+    document.getElementById("roleSelection").classList.add("hidden");
+    document.getElementById("loginFormView").classList.remove("hidden");
+
+    const badge = document.getElementById("selectedRoleBadge");
+    const label = document.getElementById("loginSectionLabel");
+    const heading = document.getElementById("loginHeading");
+    const description = document.getElementById("loginDescription");
+    const buttonText = document.getElementById("loginButtonText");
+    const userId = document.getElementById("userId");
+    const signupPrompt = document.getElementById("signupPrompt");
+
+    if(role === "admin"){
+        badge.textContent = "🛡️ Admin Access";
+        badge.classList.add("admin");
+        label.textContent = "AUTHORIZED STAFF";
+        heading.textContent = "Admin Login";
+        description.textContent = "Sign in to the SupportAI administration console.";
+        buttonText.textContent = "Sign In as Admin";
+        userId.placeholder = "e.g. USR101";
+        signupPrompt.innerHTML =
+            'Need administrator access? <span>Contact your system administrator.</span>';
+    }else{
+        badge.textContent = "👤 Customer Access";
+        badge.classList.remove("admin");
+        label.textContent = "CUSTOMER ACCESS";
+        heading.textContent = "Customer Login";
+        description.textContent = "Sign in to your customer support workspace.";
+        buttonText.textContent = "Sign In as Customer";
+        userId.placeholder = "e.g. USR102";
+        signupPrompt.innerHTML =
+            'Don\'t have a customer account? <a href="signup.html">Create a customer account</a>';
+    }
+}
+
+function showRoleSelection(){
+    selectedRole = null;
+    document.getElementById("roleSelection").classList.remove("hidden");
+    document.getElementById("loginFormView").classList.add("hidden");
+    document.getElementById("loginForm").reset();
+    document.getElementById("loginMessage").textContent = "";
+}
+
+const params = new URLSearchParams(window.location.search);
+const roleFromUrl = params.get("role");
+
+if(roleFromUrl === "customer" || roleFromUrl === "admin"){
+    selectRole(roleFromUrl);
+}
+</script>
+
+</body>
+</html>

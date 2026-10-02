@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Customer Dashboard | SupportAI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            background: #f6f8fc;
+            color: #172033;
+        }
+
+        .dashboard {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e5e9f2;
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 10px 30px;
+        }
+
+        .brand-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: #315eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .brand-subtitle {
+            font-size: 9px;
+            color: #7b8497;
+            margin-top: 2px;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #9aa3b5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 10px;
+        }
+
+        .nav-item {
+            width: 100%;
+            border: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 4px;
+            border-radius: 10px;
+            color: #667085;
+            font-size: 14px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f4fb;
+            color: #315eea;
+        }
+
+        .nav-item.active {
+            background: #edf2ff;
+            color: #315eea;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+        }
+
+        .logout-button {
+            width: 100%;
+            border: none;
+            background: #fff1f1;
+            color: #d64545;
+            padding: 11px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-button:hover {
+            background: #ffe3e3;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e9f2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 750;
+        }
+
+        .page-subtitle {
+            color: #7b8497;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #315eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: #8b94a7;
+            margin-top: 2px;
+        }
+
+        /* =========================
+           CONTENT
+        ========================= */
+
+        .content {
+            padding: 32px;
+        }
+
+        .welcome {
+            background:
+                linear-gradient(
+                    135deg,
+                    #315eea,
+                    #5278ef
+                );
+
+            color: white;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .welcome h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            font-size: 13px;
+            opacity: 0.9;
+            max-width: 550px;
+        }
+
+        .ai-badge {
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e9f2;
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .stat-label {
+            color: #7b8497;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 27px;
+            font-weight: 750;
+        }
+
+        .stat-description {
+            color: #9aa3b5;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        /* =========================
+           ACTIONS
+        ========================= */
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+        .action-card {
+            background: white;
+            border: 1px solid #e5e9f2;
+            border-radius: 15px;
+            padding: 23px;
+            transition: 0.2s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 25px rgba(30, 50, 100, 0.08);
+        }
+
+        .action-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: #edf2ff;
+            color: #315eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
+
+        .action-card h3 {
+            font-size: 15px;
+            margin-bottom: 7px;
+        }
+
+        .action-card p {
+            font-size: 12px;
+            color: #7b8497;
+            line-height: 1.6;
+            margin-bottom: 17px;
+        }
+
+        .action-button {
+            border: none;
+            background: #315eea;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .action-button:hover {
+            background: #244ed0;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+            }
+
+            .stats,
+            .actions {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                align-items: flex-start;
+                gap: 20px;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .user-name,
+            .user-role {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ✦
+            </div>
+
+            <div>
+                <div class="brand-name">
+                    SupportAI
+                </div>
+
+                <div class="brand-subtitle">
+                    Enterprise Intelligence
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="nav-title">
+            Workspace
+        </div>
+
+
+        <button class="nav-item active">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="window.location.href='/customer/chat.html'"
+        >
+            <span class="nav-icon">✦</span>
+            AI Support
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="window.location.href='/customer/tickets.html'"
+        >
+            <span class="nav-icon">▣</span>
+            My Tickets
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="window.location.href='/customer/analytics.html'" 
+        >
+            <span class="nav-icon">◉</span>
+            Call Analytics
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="window.location.href='/customer/account.html'"
+        >
+            <span class="nav-icon">◯</span>
+            Account
+        </button>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="logout-button"
+                onclick="logout()"
+            >
+                ↪ &nbsp; Sign Out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+
+                <div class="page-title">
+                    Customer Dashboard
+                </div>
+
+                <div class="page-subtitle">
+                    Your support workspace
+                </div>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <div>
+
+                    <div
+                        class="user-name"
+                        id="userName"
+                    >
+                        Customer
+                    </div>
+
+                    <div
+                        class="user-role"
+                        id="userRole"
+                    >
+                        Customer
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="user-avatar"
+                    id="userAvatar"
+                >
+                    U
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome">
+
+                <div>
+
+                    <h1 id="welcomeMessage">
+                        Welcome back!
+                    </h1>
+
+                    <p>
+                        Get instant AI-powered support,
+                        manage your tickets, and analyze
+                        your support conversations from
+                        one place.
+                    </p>
+
+                </div>
+
+
+                <div class="ai-badge">
+                    ✦ AI Support Active
+                </div>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Open Tickets
+                    </div>
+
+                    <div class="stat-value" id="customerOpenTickets">
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        Active support requests
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        AI Conversations
+                    </div>
+
+                    <div class="stat-value" id="customerConversations">
+                        0
+                    </div>
+
+                    <div class="stat-description">
+                        Your support interactions
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Account Status
+                    </div>
+
+                    <div class="stat-value">
+                        Active
+                    </div>
+
+                    <div class="stat-description">
+                        Your SupportAI account is active
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="section-title">
+                Quick Actions
+            </div>
+
+
+            <div class="actions">
+
+
+                <div class="action-card">
+
+                    <div class="action-icon">
+                        ✦
+                    </div>
+
+                    <h3>
+                        Talk to AI Support
+                    </h3>
+
+                    <p>
+                        Ask questions and get
+                        instant AI-powered answers
+                        using the enterprise knowledge base.
+                    </p>
+
+                    <button
+                        class="action-button"
+                        onclick="window.location.href='/customer/chat.html'"
+                    >
+                        Start Conversation
+                    </button>
+
+                </div>
+
+
+                <div class="action-card">
+
+                    <div class="action-icon">
+                        ▣
+                    </div>
+
+                    <h3>
+                        Manage Tickets
+                    </h3>
+
+                    <p>
+                        View your support tickets,
+                        check their status, and
+                        follow up on existing issues.
+                    </p>
+
+                    <button
+                        class="action-button"
+                        onclick="window.location.href='/customer/tickets.html'"
+                    >
+                        View Tickets
+                    </button>
+
+                </div>
+
+
+                <div class="action-card">
+
+                    <div class="action-icon">
+                        ◉
+                    </div>
+
+                    <h3>
+                        Call Analytics
+                    </h3>
+
+                    <p>
+                        Analyze support calls with
+                        AI-powered transcription,
+                        sentiment and issue detection.
+                    </p>
+
+                    <button
+                        class="action-button"
+                        onclick="window.location.href='/customer/analytics.html'"
+                    >
+                        Open Analytics
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    // ==============================================
+    // CHECK LOGIN SESSION
+    // ==============================================
+
+    const token =
+        localStorage.getItem("access_token") ||
+        sessionStorage.getItem("access_token");
+
+
+    const userData =
+        localStorage.getItem("user") ||
+        sessionStorage.getItem("user");
+
+
+    if (!token || !userData) {
+
+        window.location.href =
+            "/login.html";
+
+    }
+
+
+    // ==============================================
+    // LOAD USER INFORMATION
+    // ==============================================
+
+    if (userData) {
+
+        try {
+
+            const user =
+                JSON.parse(userData);
+
+
+            const name =
+                user.name || "Customer";
+
+
+            const role =
+                user.role || "CUSTOMER";
+
+
+            document.getElementById(
+                "userName"
+            ).textContent = name;
+
+
+            document.getElementById(
+                "userRole"
+            ).textContent = role;
+
+
+            document.getElementById(
+                "welcomeMessage"
+            ).textContent =
+                `Welcome back, ${name}!`;
+
+
+            document.getElementById(
+                "userAvatar"
+            ).textContent =
+                name.charAt(0).toUpperCase();
+
+            loadCustomerStats();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Unable to load user data:",
+                error
+            );
+
+        }
+
+    }
+
+    async function loadCustomerStats() {
+        try {
+            const res = await fetch("/api/stats/customer", {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.status === 401) return logout();
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById("customerOpenTickets").textContent = data.open_tickets || 0;
+                document.getElementById("customerConversations").textContent = data.conversations || 0;
+            }
+        } catch (e) {
+            console.warn("Could not load stats:", e);
+        }
+    }
+
+    // ==============================================
+    // LOGOUT
+    // ==============================================
+
+    function logout() {
+
+        localStorage.removeItem(
+            "access_token"
+        );
+
+        localStorage.removeItem(
+            "user"
+        );
+
+        sessionStorage.removeItem(
+            "access_token"
+        );
+
+        sessionStorage.removeItem(
+            "user"
+        );
+
+        window.location.href =
+            "/login.html";
+    }
+
+
+</script>
+
+</body>
+</html>

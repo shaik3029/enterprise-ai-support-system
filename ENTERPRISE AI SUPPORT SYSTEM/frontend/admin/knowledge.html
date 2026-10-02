@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Knowledge Base | Admin SupportAI</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, Arial, sans-serif; }
+        body { background: #f5f7fb; color: #1f2937; }
+        .layout { display: flex; min-height: 100vh; }
+        .sidebar { width: 250px; background: #111827; color: #fff; padding: 25px 18px; position: fixed; inset: 0 auto 0 0; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; margin-bottom: 35px; padding: 0 10px; }
+        .brand-icon { width: 34px; height: 34px; background: #315eea; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+        .nav-item { width: 100%; border: 0; background: transparent; color: #cbd5e1; padding: 13px 14px; margin-bottom: 6px; border-radius: 9px; text-align: left; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 10px; transition: 0.15s; }
+        .nav-item:hover, .nav-item.active { background: #1f2937; color: #fff; }
+        .nav-item.active { background: #2563eb; font-weight: 600; }
+        .nav-icon { width: 20px; text-align: center; }
+        .sidebar-bottom { position: absolute; left: 18px; right: 18px; bottom: 20px; }
+        .logout-btn { width: 100%; border: 0; background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 11px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .main { margin-left: 250px; width: calc(100% - 250px); padding: 30px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+        .topbar h1 { font-size: 26px; }
+        .topbar p { color: #6b7280; margin-top: 4px; font-size: 13px; }
+        .user-box { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; background: #2563eb; color: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; }
+        .card { background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,.04); padding: 25px; margin-bottom: 24px; border: 1px solid #e5e7eb; }
+        .card h2 { font-size: 18px; margin-bottom: 6px; }
+        .muted { color: #6b7280; font-size: 13px; }
+        .btn { border: 0; background: #2563eb; color: #fff; padding: 11px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+        .btn:hover { background: #1d4ed8; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        input[type="file"] { width: 100%; padding: 11px; border: 1px dashed #93c5fd; border-radius: 8px; background: #eff6ff; margin-top: 10px; cursor: pointer; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 24px; }
+        .stat { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,.04); border: 1px solid #e5e7eb; }
+        .stat small { color: #6b7280; font-size: 12px; }
+        .stat strong { display: block; font-size: 26px; margin-top: 8px; color: #0f172a; }
+        .table-wrap { overflow: auto; margin-top: 16px; border-radius: 8px; border: 1px solid #e5e7eb; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
+        th { background: #f8fafc; font-weight: 700; color: #475569; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #dcfce7; color: #15803d; }
+        .message { padding: 13px; border-radius: 8px; background: #eff6ff; color: #1e40af; margin-top: 15px; font-size: 13px; font-weight: 500; }
+        .message.error { background: #fef2f2; color: #b91c1c; }
+        @media(max-width:800px) { .sidebar { display: none; } .main { margin-left: 0; width: 100%; padding: 20px; } .stats { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+            <span>SupportAI</span>
+        </div>
+        <button class="nav-item" onclick="location.href='/admin/dashboard.html'"><span class="nav-icon">▦</span>Dashboard</button>
+        <button class="nav-item" onclick="location.href='/admin/tickets.html'"><span class="nav-icon">▣</span>Tickets</button>
+        <button class="nav-item active" onclick="location.href='/admin/knowledge.html'"><span class="nav-icon">▤</span>Knowledge Base</button>
+        <button class="nav-item" onclick="location.href='/admin/analytics.html'"><span class="nav-icon">◈</span>Call Analytics</button>
+        <button class="nav-item" onclick="location.href='/admin/account.html'"><span class="nav-icon">◯</span>Account</button>
+        <div class="sidebar-bottom">
+            <button class="logout-btn" onclick="logout()">↪ Sign Out</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div>
+                <h1>Knowledge Base Management</h1>
+                <p>Manage and index enterprise security documents used by the RAG policy agent.</p>
+            </div>
+            <div class="user-box">
+                <div class="avatar" data-avatar>A</div>
+                <div>
+                    <strong data-user-name>Administrator</strong>
+                    <div class="muted" data-user-role>ADMIN</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat"><small>Indexed Documents</small><strong id="docCount">0</strong></div>
+            <div class="stat"><small>Retrieval Engine</small><strong>Active (RAG)</strong></div>
+            <div class="stat"><small>Vector Store</small><strong>FAISS Local</strong></div>
+        </div>
+
+        <!-- UPLOAD SECTION -->
+        <section class="card">
+            <h2>Upload Enterprise Document</h2>
+            <p class="muted">Upload a security policy or compliance PDF. The RAG vector store will automatically re-index it.</p>
+            <div style="margin: 16px 0;">
+                <input id="file" type="file" accept=".pdf">
+            </div>
+            <button id="uploadBtn" class="btn" onclick="uploadDoc()">Upload &amp; Index PDF →</button>
+            <div id="msg"></div>
+        </section>
+
+        <!-- DOCUMENT LIST SECTION -->
+        <section class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                <div>
+                    <h2>Indexed Knowledge Sources</h2>
+                    <p class="muted">Official documents queried by the RAG Policy Agent during customer support interactions.</p>
+                </div>
+                <button class="btn" style="padding: 8px 14px; font-size: 13px;" onclick="loadDocuments()">↻ Refresh List</button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Size (KB)</th>
+                            <th>Last Modified</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docRows">
+                        <tr><td colspan="5">Loading indexed documents...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+    const userData = localStorage.getItem("user") || sessionStorage.getItem("user");
+    if (!token || !userData) { location.href = "/login.html"; }
+
+    let user = null;
+    try { user = JSON.parse(userData); } catch(e) { logout(); }
+    if (user && user.role !== "ADMIN") { location.href = "/customer/dashboard.html"; }
+
+    if (user) {
+        document.querySelectorAll("[data-user-name]").forEach(e => e.textContent = user.name || "Administrator");
+        document.querySelectorAll("[data-user-role]").forEach(e => e.textContent = user.role || "ADMIN");
+        document.querySelectorAll("[data-avatar]").forEach(e => e.textContent = (user.name || "A").charAt(0).toUpperCase());
+    }
+
+    function logout() {
+        localStorage.clear();
+        sessionStorage.clear();
+        location.href = "/login.html";
+    }
+
+    function esc(v) {
+        return String(v ?? "").replace(/[&<>"']/g, m => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+        }[m]));
+    }
+
+    async function loadDocuments() {
+        const tbody = document.getElementById("docRows");
+        tbody.innerHTML = '<tr><td colspan="5">Loading indexed documents...</td></tr>';
+        try {
+            const r = await fetch("/api/documents", {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (r.status === 401) return logout();
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.detail || "Unable to retrieve documents");
+
+            const docs = d.documents || [];
+            document.getElementById("docCount").textContent = docs.length;
+
+            if (!docs.length) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#6b7280;">No indexed documents found. Upload a PDF above.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = docs.map(doc => `
+                <tr>
+                    <td><strong>📄 ${esc(doc.filename)}</strong></td>
+                    <td>${esc(doc.size_kb)} KB</td>
+                    <td>${esc(doc.last_modified)}</td>
+                    <td><span class="badge">● ${esc(doc.status)}</span></td>
+                    <td style="color:#64748b;">${esc(doc.type)}</td>
+                </tr>
+            `).join("");
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="5" class="message error">${esc(err.message)}</td></tr>`;
+        }
+    }
+
+    async function uploadDoc() {
+        const fileInput = document.getElementById("file");
+        const f = fileInput.files[0];
+        const m = document.getElementById("msg");
+        const btn = document.getElementById("uploadBtn");
+
+        if (!f) {
+            m.innerHTML = '<div class="message error">Please select a PDF file first.</div>';
+            return;
+        }
+        if (!f.name.toLowerCase().endsWith(".pdf")) {
+            m.innerHTML = '<div class="message error">Only PDF documents (.pdf) are supported.</div>';
+            return;
+        }
+
+        m.innerHTML = '<div class="message">Uploading document and generating FAISS vector embeddings... This may take a few moments.</div>';
+        btn.disabled = true;
+
+        const fd = new FormData();
+        fd.append("file", f);
+
+        try {
+            const r = await fetch("/api/documents/upload", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` },
+                body: fd
+            });
+            if (r.status === 401) return logout();
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.detail || "Upload failed");
+
+            m.innerHTML = `<div class="message" style="background:#f0fdf4; color:#15803d;">${esc(d.message || "Document uploaded and indexed successfully!")}</div>`;
+            fileInput.value = "";
+            loadDocuments();
+        } catch (e) {
+            m.innerHTML = `<div class="message error">${esc(e.message)}</div>`;
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    loadDocuments();
+</script>
+</body>
+</html>
